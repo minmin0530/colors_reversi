@@ -1,0 +1,25 @@
+<!Doctype html>
+<html>
+<head>
+  <title>sample </title>
+  <script src="global.js"></script>
+  <script src="piece.js"></script>
+  <script src="field.js"></script>
+  <script>
+
+    //画面を開いた時に１度呼ばれる
+function onClick(e) {
+  piece.setPiece(e);
+}
+
+window.onload = function(){
+  var field = new Field();
+  piece = new Piece();
+};
+
+  </script>
+</head>
+<body>
+  <canvas id="screen" width="640px" height="640px"></canvas>
+</body>
+</html>
