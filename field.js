@@ -29,7 +29,7 @@ class Field {
       ctx.fillStyle = 'rgb(0,0,0)';
 
       //繰り返しをする、繰り返しの間にxが0から9までカウントアップ                                             
-      for (var x = 0; x < 9; ++x) {
+      for (var x = 0; x < fieldCellMax + 1; ++x) {
 
         //線を引く開始点を指定、fieldX + x * cellSizeの位置とfieldYの位置を指定                                             
         ctx.moveTo(fieldX + x * cellSize, fieldY);
@@ -39,7 +39,7 @@ class Field {
       }
 
       //上記の横線と同様に縦線も9本引く                                                                         
-      for (var y = 0; y < 9; ++y) {                                             
+      for (var y = 0; y < fieldCellMax + 1; ++y) {                                             
         ctx.moveTo(fieldX,             fieldY + y * cellSize);                  
         ctx.lineTo(fieldX + fieldSize, fieldY + y * cellSize);                  
       }

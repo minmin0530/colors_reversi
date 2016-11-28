@@ -2,6 +2,58 @@
 class Piece {
   constructor() {
   }
+
+  displayPoint(newPoint) {
+    for (var v  = 0; v  < playerNumber; v++ ) { point[v] = 0;
+    for (var yy = 0; yy < fieldCellMax; yy++) {
+    for (var xx = 0; xx < fieldCellMax; xx++) {
+      if (fieldArrayArray[yy][xx] == v) {
+        ++point[v];
+      }
+    }
+    }
+    }
+     
+    var display_point = document.getElementById("point");
+    display_point.innerHTML = "";
+    for (var v = 0; v < playerNumber; v++) {
+      if (v == order % playerNumber) {
+        display_point.innerHTML += "<span style='font-size:32px;background-color:#888;color:" + colorArrayPoint[v] + ";padding:8px;'>" + newPoint + "</span>";
+      } else {
+        display_point.innerHTML += "<span style='font-size:32px;background-color:#888;color:" + colorArrayPoint[v] + ";padding:8px;'>" + point[v] + "</span>";
+      }
+    }   
+  }
+    
+  check3() {
+    if (order < playerNumber) {
+      this.displayPoint(1);
+      return true;
+    }
+    if (point[order % playerNumber] == 0) {
+      this.displayPoint(1);
+      return true;
+    }
+    var newPoint = 0;    
+    for (var yy = 0; yy < fieldCellMax; yy++) {
+    for (var xx = 0; xx < fieldCellMax; xx++) {
+      if (fieldArrayArray[yy][xx] == order % playerNumber) {
+        ++newPoint;
+      }
+    }
+    }
+    if (newPoint == (point[order % playerNumber] + 1) ) {
+      for (var yy = 0; yy < fieldCellMax; yy++) {
+      for (var xx = 0; xx < fieldCellMax; xx++) {
+        fieldArrayArray[yy][xx] = fieldArrayArraySave[yy][xx];
+      }
+      }
+      return false;
+    } else {
+      this.displayPoint(newPoint);
+      return true;
+    }
+  }
   check2(x, y) {
     if (fieldArrayArray[y][x] != -1) {
       return false;
@@ -21,15 +73,27 @@ class Piece {
     return false;
   }
   check(x, y) {
+    //point[order % playerNumber] = 0;
+    var p = 0;
+    for (var yy = 0; yy < fieldCellMax; yy++) {
+    for (var xx = 0; xx < fieldCellMax; xx++) {
+      fieldArrayArraySave[yy][xx] = fieldArrayArray[yy][xx];
+      if (fieldArrayArray[yy][xx] == order % playerNumber) {
+        //++point[order % playerNumber];
+        ++p;
+      }
+    }
+    }
+    point[order % playerNumber] = p;
     if (order == 0) {
       return true;
     }
     return this.check2(x, y);
   }
   tipOver(x, y) {
-    fieldArrayArray[y][x] = order % 8;
+    fieldArrayArray[y][x] = order % playerNumber;
 
-    for (var v = 0; v < 8; v++) {
+    for (var v = 0; v < 8; v++) {//８方向
       var addx, addy;
       var rangex, rangey;
       if      (v == 0) {addx =  1; addy =  1; rangex = 0;            rangey = 0; }
@@ -78,22 +142,25 @@ class Piece {
 
     if (this.check(xx, yy)) {
       this.tipOver(xx, yy);
-    
-      for (var i = 0; i < 8; ++i) {
-        for (var j = 0; j < 8; ++j) {
+
+      if (this.check3()) {
+        for (var i = 0; i < fieldCellMax; ++i) {
+          for (var j = 0; j < fieldCellMax; ++j) {
         
-          ctx.beginPath();
-          if (fieldArrayArray[i][j] == -1) {
-            ctx.fillStyle = 'rgb(0,128,0)';        
-          } else {
-            ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-          }
-          ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-          ctx.fill();                                             
+            ctx.beginPath();
+            if (fieldArrayArray[i][j] == -1) {
+              ctx.fillStyle = 'rgb(0,128,0)';        
+            } else {
+              ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
+            }
+            ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+            ctx.fill();                                             
           
+          }
         }
+        order++;
+            
       }
-      order++;
     }
   }
 }
