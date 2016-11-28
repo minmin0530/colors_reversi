@@ -2,78 +2,46 @@
 class Piece {
   constructor() {
   }
+
   tipOver(x, y) {
     fieldArrayArray[y][x] = order % 8;
-    for (var xx = x; xx >= 0; xx--) {//置いた箇所から数えていく
-      var break_flag = false;
-      if (fieldArrayArray[y][xx] == fieldArrayArray[y][x]) {//同色の場合
-        for (var none = xx; none < x; none++) {//同色の箇所から数えていく
-          if (fieldArrayArray[y][none] == -1) {//コマなしの場合
-            break_flag = true;//ブレークする
-            break;
-          }
-        }
-        if (break_flag == true) {
-          break;
-        }
-        break_flag = false;
-        for (var xxx = x; xxx > xx; xxx--) {//置いた場所から数えていく
-          fieldArrayArray[y][xxx] = fieldArrayArray[y][x];//同色の箇所まで塗っていく
-          break_flag = true;//ブレークする
-        }
-        if (break_flag == true) {//同色の箇所まで塗れたらブレーク
-          break;
-        }
-      }
-    }
 
-    for (var xx = x, yy = y; xx >= 0 && yy >= 0; xx--, yy--) {//置いた箇所から数えていく
-      var break_flag = false;
-      if (fieldArrayArray[yy][xx] == fieldArrayArray[y][x]) {//同色の場合
-        for (var none = xx, noney = yy; none < x && noney < y; none++, noney++) {//同色の箇所から数えていく
-          if (fieldArrayArray[noney][none] == -1) {//コマなしの場合
+    for (var v = 0; v < 8; v++) {
+      var addx, addy;
+      var rangex, rangey;
+      if      (v == 0) {addx =  1; addy =  1; rangex = 0; rangey = 0; }
+      else if (v == 1) {addx = -1; addy =  1; rangex = 8; rangey = 0; }
+      else if (v == 2) {addx =  1; addy = -1; rangex = 0; rangey = 8; }
+      else if (v == 3) {addx = -1; addy = -1; rangex = 8; rangey = 8; }
+      else if (v == 4) {addx =  1; addy =  0; rangex = 0; rangey = 0; }
+      else if (v == 5) {addx = -1; addy =  0; rangex = 8; rangey = 8; }
+      else if (v == 6) {addx =  0; addy =  1; rangex = 0; rangey = 0; }
+      else if (v == 7) {addx =  0; addy = -1; rangex = 8; rangey = 8; }
+      for (var xx = x, yy = y; xx != rangex && yy != rangey; xx -= addx, yy -= addy) {//置いた箇所から数えていく
+        var break_flag = false;
+        if (fieldArrayArray[yy][xx] == fieldArrayArray[y][x]) {//同色の場合
+          for (var none = xx, noney = yy; (none != x || addx == 0) && (noney != y || addy == 0); none += addx, noney += addy) {//同色の箇所から数えていく
+            if (fieldArrayArray[noney][none] == -1) {//コマなしの場合
+              break_flag = true;//ブレークする
+              break;
+            }
+          }
+          if (break_flag == true) {
+            break;
+          }
+          break_flag = false;
+          for (var xxx = x, yyy = y; (xxx != xx || addx == 0) && (yyy != yy || addy == 0); xxx -= addx, yyy -= addy) {//置いた場所から数えていく
+            fieldArrayArray[yyy][xxx] = fieldArrayArray[y][x];//同色の箇所まで塗っていく
             break_flag = true;//ブレークする
+          }
+          if (break_flag == true) {//同色の箇所まで塗れたらブレーク
             break;
           }
         }
-        if (break_flag == true) {
-          break;
-        }
-        break_flag = false;
-        for (var xxx = x, yyy = y; xxx > xx && yyy > yy; xxx--, yyy--) {//置いた場所から数えていく
-          fieldArrayArray[yyy][xxx] = fieldArrayArray[y][x];//同色の箇所まで塗っていく
-          break_flag = true;//ブレークする
-        }
-        if (break_flag == true) {//同色の箇所まで塗れたらブレーク
-          break;
-        }
-      }
-    }      
-      
-    for (var xx = x; xx <= 8; xx++) {//置いた箇所から数えていく
-      var break_flag = false;
-      if (fieldArrayArray[y][xx] == fieldArrayArray[y][x]) {//同色の場合
-        for (var none = xx; none > x; none--) {//同色の箇所から数えていく
-          if (fieldArrayArray[y][none] == -1) {//コマなしの場合
-            break_flag = true;//ブレークする
-            break;
-          }
-        }
-        if (break_flag == true) {
-          break;
-        }
-        break_flag = false;
-        for (var xxx = x; xxx < xx; xxx++) {//置いた場所から数えていく
-          fieldArrayArray[y][xxx] = fieldArrayArray[y][x];//同色の箇所まで塗っていく
-          break_flag = true;//ブレークする
-        }
-        if (break_flag == true) {//同色の箇所まで塗れたらブレーク
-          break;
-        }
-      }
+      }      
     }
-
   }
+
   setPiece(e) {
     var rect = e.target.getBoundingClientRect();                              
     var x = e.clientX - rect.left;                                                
