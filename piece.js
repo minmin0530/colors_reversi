@@ -112,9 +112,9 @@ class Piece {
         this.displayPoint(newPoint);
         ++order;
         return false;
-    } else {
+      } else {
         return true;
-    }
+      }
 
     }
         
