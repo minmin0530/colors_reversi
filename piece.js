@@ -90,19 +90,96 @@ class Piece {
     }
     return this.check2(x, y);
   }
+  pass() {
+    for (var y = 0; y < fieldCellMax; y++) {
+    for (var x = 0; x < fieldCellMax; x++) {
+      if (this.check2(x, y)) {
+
+        for (var yy = 0; yy < fieldCellMax; yy++) {
+        for (var xx = 0; xx < fieldCellMax; xx++) {
+          fieldArrayArraySave[yy][xx] = fieldArrayArray[yy][xx];
+        }
+        }
+        fieldArrayArraySave[y][x] = order % playerNumber;
+
+        for (var v = 0; v < 8; v++) {//８方向
+          var addx, addy;
+          var rangex, rangey;
+          if      (v == 0) {addx =  1; addy =  1; rangex = 0;            rangey = 0; }
+          else if (v == 1) {addx = -1; addy =  1; rangex = fieldCellMax; rangey = 0; }
+          else if (v == 2) {addx =  1; addy = -1; rangex = 0;            rangey = fieldCellMax; }
+          else if (v == 3) {addx = -1; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
+          else if (v == 4) {addx =  1; addy =  0; rangex = 0;            rangey = 0; }
+          else if (v == 5) {addx = -1; addy =  0; rangex = fieldCellMax; rangey = fieldCellMax; }
+          else if (v == 6) {addx =  0; addy =  1; rangex = 0;            rangey = 0; }
+          else if (v == 7) {addx =  0; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
+          for (var xx = x, yy = y; xx != rangex && yy != rangey; xx -= addx, yy -= addy) {//置いた箇所から数えていく
+            var break_flag = false;
+            if (fieldArrayArraySave[yy][xx] == fieldArrayArraySave[y][x]) {//同色の場合
+              for (var none = xx, noney = yy; (none != x || addx == 0) && (noney != y || addy == 0); none += addx, noney += addy) {//同色の箇所から数えていく
+                if (fieldArrayArraySave[noney][none] == -1) {//コマなしの場合
+                  break_flag = true;//ブレークする
+                  break;
+                }
+              }
+              if (break_flag == true) {
+                break;
+              }
+              break_flag = false;
+              for (var xxx = x, yyy = y; (xxx != xx || addx == 0) && (yyy != yy || addy == 0); xxx -= addx, yyy -= addy) {//置いた場所から数えていく
+                fieldArrayArraySave[yyy][xxx] = fieldArrayArraySave[y][x];//同色の箇所まで塗っていく
+                break_flag = true;//ブレークする
+              }
+              if (break_flag == true) {//同色の箇所まで塗れたらブレーク
+                break;
+              }
+            }
+          }      
+        }
+
+        if (order < playerNumber * 2) {
+          return false;
+        }
+        if (point[order % playerNumber] == 0) {
+          return false;
+        }
+        var newPoint = 0;    
+        for (var yy = 0; yy < fieldCellMax; yy++) {
+        for (var xx = 0; xx < fieldCellMax; xx++) {
+          if (fieldArrayArraySave[yy][xx] == order % playerNumber) {
+            ++newPoint;
+          }
+        }
+        }
+        if (newPoint == (point[order % playerNumber] + 1) ) {
+/*      for (var yy = 0; yy < fieldCellMax; yy++) {
+      for (var xx = 0; xx < fieldCellMax; xx++) {
+        fieldArrayArraySave[yy][xx] = fieldArrayArraySave[yy][xx];
+      }
+      }*/
+//      return false;
+        } else {
+          return false;
+        }
+
+      }
+    }
+    }
+    return true;
+  }
   tipOver(x, y) {
     fieldArrayArray[y][x] = order % playerNumber;
 
     for (var v = 0; v < 8; v++) {//８方向
       var addx, addy;
       var rangex, rangey;
-      if      (v == 0) {addx =  1; addy =  1; rangex = 0;            rangey = 0; }
-      else if (v == 1) {addx = -1; addy =  1; rangex = fieldCellMax; rangey = 0; }
-      else if (v == 2) {addx =  1; addy = -1; rangex = 0;            rangey = fieldCellMax; }
+      if      (v == 0) {addx =  1; addy =  1; rangex = -1;            rangey = -1; }
+      else if (v == 1) {addx = -1; addy =  1; rangex = fieldCellMax; rangey = -1; }
+      else if (v == 2) {addx =  1; addy = -1; rangex = -1;            rangey = fieldCellMax; }
       else if (v == 3) {addx = -1; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
-      else if (v == 4) {addx =  1; addy =  0; rangex = 0;            rangey = 0; }
+      else if (v == 4) {addx =  1; addy =  0; rangex = -1;            rangey = -1; }
       else if (v == 5) {addx = -1; addy =  0; rangex = fieldCellMax; rangey = fieldCellMax; }
-      else if (v == 6) {addx =  0; addy =  1; rangex = 0;            rangey = 0; }
+      else if (v == 6) {addx =  0; addy =  1; rangex = -1;            rangey = -1; }
       else if (v == 7) {addx =  0; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
       for (var xx = x, yy = y; xx != rangex && yy != rangey; xx -= addx, yy -= addy) {//置いた箇所から数えていく
         var break_flag = false;
@@ -139,7 +216,7 @@ class Piece {
     }
     var xx = ~~((x - fieldX) / cellSize);
     var yy = ~~((y - fieldY) / cellSize);
-
+      
     if (this.check(xx, yy)) {
       this.tipOver(xx, yy);
 
@@ -159,8 +236,25 @@ class Piece {
           }
         }
         order++;
-            
+
+        if (this.pass()) {
+          var display_message = document.getElementById("message");
+          display_message.innerHTML = "";
+            display_message.innerHTML +=
+              "<span style='font-size:32px;background-color:#888;color:" +
+              colorArrayPoint[order % playerNumber] + ";padding:8px;'>" +
+              "パスです<button style='width:64px; height:42px; font-size:32px;' onClick='click_ok_button();'>OK</button>" +
+              "</span>";
+        }
       }
     }
+
   }
+}
+
+function click_ok_button() {
+  var display_message = document.getElementById("message");
+  display_message.innerHTML = "";
+  ++order;
+
 }
