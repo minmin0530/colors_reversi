@@ -26,10 +26,6 @@ class Piece {
   }
     
   check3() {
-    if (order < playerNumber) {
-      this.displayPoint(1);
-      return true;
-    }
     if (point[order % playerNumber] == 0) {
       this.displayPoint(1);
       return true;
@@ -54,7 +50,7 @@ class Piece {
       return true;
     }
   }
-  check2(x, y) {
+  check2(x, y) {      
     if (fieldArrayArray[y][x] != -1) {
       return false;
     }
@@ -88,7 +84,40 @@ class Piece {
     if (order == 0) {
       return true;
     }
-    return this.check2(x, y);
+    if (this.check2(x, y)){
+      if (order < playerNumber * 2) {
+        fieldArrayArray[y][x] = order % playerNumber;
+        
+        for (var i = 0; i < fieldCellMax; ++i) {
+        for (var j = 0; j < fieldCellMax; ++j) {
+          ctx.beginPath();
+          if (fieldArrayArray[i][j] == -1) {
+            ctx.fillStyle = 'rgb(0,128,0)';        
+          } else {
+            ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
+          }
+          ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+          ctx.fill();                                             
+        }
+        }        
+        
+        var newPoint = 0;    
+        for (var yy = 0; yy < fieldCellMax; yy++) {
+        for (var xx = 0; xx < fieldCellMax; xx++) {
+          if (fieldArrayArray[yy][xx] == order % playerNumber) {
+            ++newPoint;
+          }
+        }
+        }
+        this.displayPoint(newPoint);
+        ++order;
+        return false;
+    } else {
+        return true;
+    }
+
+    }
+        
   }
   pass() {
     for (var y = 0; y < fieldCellMax; y++) {

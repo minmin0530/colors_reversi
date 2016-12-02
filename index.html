@@ -11,8 +11,24 @@
 function onClick(e) {
   piece.setPiece(e);
 }
-
+function selectPlayerNumber() {
+  var selectPlayerNumber = document.getElementById('selectPlayerNumber');
+  var display_player_number = document.getElementById("playerNumber");
+  playerNumber = selectPlayerNumber.value;
+}
 window.onload = function(){
+  var display_player_number = document.getElementById("playerNumber");
+          display_player_number.innerHTML = "プレイヤー人数<select id='selectPlayerNumber'>" +
+              "<option value='1'>1</option>" + 
+              "<option value='2'>2</option>" + 
+              "<option value='3'>3</option>" + 
+              "<option value='4'>4</option>" + 
+              "<option value='5'>5</option>" + 
+              "<option value='6'>6</option>" + 
+              "<option value='7'>7</option>" + 
+              "<option value='8'>8</option>" +
+              "</select>" +
+              "<button onClick='selectPlayerNumber();'>決定</button>";    
   var field = new Field();
   piece = new Piece();
 };
@@ -20,6 +36,7 @@ window.onload = function(){
   </script>
 </head>
 <body>
+  <div id="playerNumber"></div>
   <canvas id="screen" width="640px" height="640px"></canvas>
   <div id="point"></div>
   <div id="message"></div>
