@@ -1,3 +1,4 @@
+var ai;
 var piece;
 var ctx;
 var fieldX = 64;     //オセロ盤の位置Xに64を指定                                                          

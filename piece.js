@@ -84,6 +84,8 @@ class Piece {
     if (order == 0) {
       return true;
     }
+
+    //各２コマずつ置くまでひっくり返らない
     if (this.check2(x, y)){
       if (order < playerNumber * 2) {
         fieldArrayArray[y][x] = order % playerNumber;
@@ -202,13 +204,13 @@ class Piece {
     for (var v = 0; v < 8; v++) {//８方向
       var addx, addy;
       var rangex, rangey;
-      if      (v == 0) {addx =  1; addy =  1; rangex = -1;            rangey = -1; }
+      if      (v == 0) {addx =  1; addy =  1; rangex = -1;           rangey = -1; }
       else if (v == 1) {addx = -1; addy =  1; rangex = fieldCellMax; rangey = -1; }
-      else if (v == 2) {addx =  1; addy = -1; rangex = -1;            rangey = fieldCellMax; }
+      else if (v == 2) {addx =  1; addy = -1; rangex = -1;           rangey = fieldCellMax; }
       else if (v == 3) {addx = -1; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
-      else if (v == 4) {addx =  1; addy =  0; rangex = -1;            rangey = -1; }
+      else if (v == 4) {addx =  1; addy =  0; rangex = -1;           rangey = -1; }
       else if (v == 5) {addx = -1; addy =  0; rangex = fieldCellMax; rangey = fieldCellMax; }
-      else if (v == 6) {addx =  0; addy =  1; rangex = -1;            rangey = -1; }
+      else if (v == 6) {addx =  0; addy =  1; rangex = -1;           rangey = -1; }
       else if (v == 7) {addx =  0; addy = -1; rangex = fieldCellMax; rangey = fieldCellMax; }
       for (var xx = x, yy = y; xx != rangex && yy != rangey; xx -= addx, yy -= addy) {//置いた箇所から数えていく
         var break_flag = false;
@@ -235,17 +237,8 @@ class Piece {
     }
   }
 
-  setPiece(e) {
-    var rect = e.target.getBoundingClientRect();                              
-    var x = e.clientX - rect.left;                                                
-    var y = e.clientY - rect.top;                                                 
-    if (x < fieldX || x > fieldX + fieldSize ||                               
-        y < fieldY || y > fieldY + fieldSize) {                               
-      return;                                                                 
-    }
-    var xx = ~~((x - fieldX) / cellSize);
-    var yy = ~~((y - fieldY) / cellSize);
-      
+  setPieceXY(xx, yy) {
+    var done = false;
     if (this.check(xx, yy)) {
       this.tipOver(xx, yy);
 
@@ -275,9 +268,29 @@ class Piece {
               "パスです<button style='width:64px; height:42px; font-size:32px;' onClick='click_ok_button();'>OK</button>" +
               "</span>";
         }
+        done = true;
       }
     }
 
+    if (order < fieldCellMax * fieldCellMax) {
+      if (order % playerNumber != 0) {
+        ai.setPiece();
+      }
+    }
+    
+  }
+  setPiece(e) {
+    var rect = e.target.getBoundingClientRect();                              
+    var x = e.clientX - rect.left;                                                
+    var y = e.clientY - rect.top;                                                 
+    if (x < fieldX || x > fieldX + fieldSize ||                               
+        y < fieldY || y > fieldY + fieldSize) {                               
+      return;                                                                 
+    }
+    var xx = ~~((x - fieldX) / cellSize);
+    var yy = ~~((y - fieldY) / cellSize);
+      
+    this.setPieceXY(xx, yy);
   }
 }
 
