@@ -1,6 +1,9 @@
-
 class Piece {
   constructor() {
+    for (var v = 0; v < fieldCellMax * fieldCellMax; ++v) {
+      globalXArray[v] = new Array();
+      globalYArray[v] = new Array();
+    }
   }
 
   displayPoint(newPoint) {
@@ -89,19 +92,21 @@ class Piece {
     if (this.check2(x, y)){
       if (order < playerNumber * 2) {
         fieldArrayArray[y][x] = order % playerNumber;
-        
-        for (var i = 0; i < fieldCellMax; ++i) {
-        for (var j = 0; j < fieldCellMax; ++j) {
-          ctx.beginPath();
-          if (fieldArrayArray[i][j] == -1) {
-            ctx.fillStyle = 'rgb(0,128,0)';        
-          } else {
-            ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-          }
-          ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-          ctx.fill();                                             
-        }
-        }        
+        globalXArray[order].push(x);
+        globalYArray[order].push(y);
+
+//        for (var i = 0; i < fieldCellMax; ++i) {
+//        for (var j = 0; j < fieldCellMax; ++j) {
+//          ctx.beginPath();
+//          if (fieldArrayArray[i][j] == -1) {
+//            ctx.fillStyle = 'rgb(0,128,0)';        
+//          } else {
+//            ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
+//          }
+//          ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+//          ctx.fill();                                             
+//        }
+//        }        
         
         var newPoint = 0;    
         for (var yy = 0; yy < fieldCellMax; yy++) {
@@ -199,8 +204,12 @@ class Piece {
     return true;
   }
   tipOver(x, y) {
+      if (aiPass) {
+    //    order++;
+    //    aiPass = false;
+      }
     fieldArrayArray[y][x] = order % playerNumber;
-
+console.log("tipOver" + fieldArrayArray[y][x]);
     for (var v = 0; v < 8; v++) {//８方向
       var addx, addy;
       var rangex, rangey;
@@ -227,6 +236,9 @@ class Piece {
           break_flag = false;
           for (var xxx = x, yyy = y; (xxx != xx || addx == 0) && (yyy != yy || addy == 0); xxx -= addx, yyy -= addy) {//置いた場所から数えていく
             fieldArrayArray[yyy][xxx] = fieldArrayArray[y][x];//同色の箇所まで塗っていく
+            globalXArray[order].push(xxx);
+            globalYArray[order].push(yyy);
+              console.log("paint" + globalYArray[order].length);
             break_flag = true;//ブレークする
           }
           if (break_flag == true) {//同色の箇所まで塗れたらブレーク
@@ -243,22 +255,21 @@ class Piece {
       this.tipOver(xx, yy);
 
       if (this.check3()) {
-        for (var i = 0; i < fieldCellMax; ++i) {
-          for (var j = 0; j < fieldCellMax; ++j) {
-        
-            ctx.beginPath();
-            if (fieldArrayArray[i][j] == -1) {
-              ctx.fillStyle = 'rgb(0,128,0)';        
-            } else {
-              ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-            }
-            ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-            ctx.fill();                                             
-          
-          }
-        }
+//        for (var i = 0; i < fieldCellMax; ++i) {
+//          for (var j = 0; j < fieldCellMax; ++j) {
+//        
+//            ctx.beginPath();
+//            if (fieldArrayArray[i][j] == -1) {
+//              ctx.fillStyle = 'rgb(0,128,0)';        
+//            } else {
+//              ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
+//            }
+//            ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+//            ctx.fill();                                             
+//          
+//          }
+//        }
         order++;
-
         if (this.pass()) {
           var display_message = document.getElementById("message");
           display_message.innerHTML = "";
@@ -271,12 +282,12 @@ class Piece {
         done = true;
       }
     }
-
-    if (order < fieldCellMax * fieldCellMax) {
-      if (order % playerNumber != 0) {
-        ai.setPiece();
-      }
-    }
+    aiFlag = true;
+//    if (order < fieldCellMax * fieldCellMax) {
+//      if (order % playerNumber != 0) {
+//        ai.setPiece();
+//      }
+//    }
     
   }
   setPiece(e) {
@@ -289,7 +300,18 @@ class Piece {
     }
     var xx = ~~((x - fieldX) / cellSize);
     var yy = ~~((y - fieldY) / cellSize);
-      
+    if (order > 0 && aiPass) {
+      order++;
+      vvv++;
+        console.log("aiPass");
+      aiPass = false;
+    }
+    if (order == 0) {
+//      aiPass = false;
+      globalXArray[order].push(xx);
+      globalYArray[order].push(yy);
+    }
+  
     this.setPieceXY(xx, yy);
   }
 }
@@ -298,5 +320,60 @@ function click_ok_button() {
   var display_message = document.getElementById("message");
   display_message.innerHTML = "";
   ++order;
+  ++vvv;
 
+}
+
+var aiFlag = false;
+var vv = 0;
+var vvv = 0;
+class PlayGame {
+  constructor () {
+    this.x = 0;
+    this.y = 0;
+    this.animation = 0;
+  }
+  move () {
+      
+    if (aiFlag) {
+      this.animation++;
+      if (this.animation > 50) {
+        this.animation = 0;
+        aiFlag = false;
+        if (order <= fieldCellMax * fieldCellMax) {
+          if (order % playerNumber != 0) {
+            ai.setPiece();
+          }
+        }
+
+      }
+    
+    }
+  }
+  draw () {
+    if (order <= fieldCellMax * fieldCellMax && globalYArray[vvv].length > 0) {
+      ctx.beginPath();
+      ctx.fillStyle = colorArray[fieldArrayArray[globalYArray[vvv][vv]][globalXArray[vvv][vv]]];
+      ctx.arc(globalXArray[vvv][vv] * cellSize + fieldX + cellSize / 2, globalYArray[vvv][vv] * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+      ctx.fill();
+
+      console.log(globalXArray[vvv][vv] + ":" + globalYArray[vvv][vv] + ":" + fieldArrayArray[globalYArray[vvv][vv]][globalXArray[vvv][vv]]);
+      if (vv < globalXArray[vvv].length - 1) {
+        ++vv;
+      } else {
+        if (order > vvv){//vvv < globalXArray[vvv].length != 0) {
+          ++vvv;
+          vv = 0;
+        }
+      }
+        
+    }
+      
+  }
+}
+
+
+function mainLoop() {
+  playGame.draw();
+  playGame.move();
 }
