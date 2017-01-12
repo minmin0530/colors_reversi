@@ -246,48 +246,14 @@ pass() {
   }
 
   setPieceXY(xx, yy) {
-    var done = false;
     if (this.check(xx, yy)) {
       this.tipOver(xx, yy);
 
       if (this.check3()) {
-//        for (var i = 0; i < fieldCellMax; ++i) {
-//          for (var j = 0; j < fieldCellMax; ++j) {
-//        
-//            ctx.beginPath();
-//            if (fieldArrayArray[i][j] == -1) {
-//              ctx.fillStyle = 'rgb(0,128,0)';        
-//            } else {
-//              ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-//            }
-//            ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-//            ctx.fill();                                             
-//          
-//          }
-//        }
-        //order++;
-        if (this.pass()) {
-            //aiPass = true;
-          var display_message = document.getElementById("message");
-          display_message.innerHTML = "";
-            display_message.innerHTML +=
-              "<span style='font-size:32px;background-color:#888;color:" +
-              colorArrayPoint[order % playerNumber] + ";padding:8px;'>" +
-              "AIがパスです<button style='width:64px; height:42px; font-size:32px;' onClick='click_ok_button();'>OK</button>" +
-              "</span>";
-        } else {
-          done = true;
-        }
+        return true;
       }
     }
-    return done;
-    //aiFlag = true;
-//    if (order < fieldCellMax * fieldCellMax) {
-//      if (order % playerNumber != 0) {
-//        ai.setPiece();
-//      }
-//    }
-    
+    return false;
   }
 
   setPiece() {
@@ -313,14 +279,12 @@ pass() {
         }          
         if (this.setPieceXY(x,y)) {
           setPieceArrayX.push(x);
-          setPieceArrayY.push(y);              
+          setPieceArrayY.push(y);
         }
       }
     }
     }
     if (order >= playerNumber * 2 && setPieceArrayX.length >= 1) {
-//      this.setPiece();
-//    }
       var rand = Math.floor( Math.random() * setPieceArrayX.length);
       piece.setPieceXY(setPieceArrayX[rand], setPieceArrayY[rand]);
     }

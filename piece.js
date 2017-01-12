@@ -319,9 +319,11 @@ console.log("tipOver" + fieldArrayArray[y][x]);
 function click_ok_button() {
   var display_message = document.getElementById("message");
   display_message.innerHTML = "";
+  if (order % playerNumber == 0) {
+    aiFlag = true;
   ++order;
-  ++vvv;
-
+    ++vvv;
+  }
 }
 
 var aiFlag = false;
