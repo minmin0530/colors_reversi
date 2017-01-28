@@ -278,6 +278,7 @@ console.log("tipOver" + fieldArrayArray[y][x]);
               colorArrayPoint[order % playerNumber] + ";padding:8px;'>" +
               "パスです<button style='width:64px; height:42px; font-size:32px;' onClick='click_ok_button();'>OK</button>" +
               "</span>";
+          passFlag = true;
         }
         done = true;
       }
@@ -291,28 +292,30 @@ console.log("tipOver" + fieldArrayArray[y][x]);
     
   }
   setPiece(e) {
-    var rect = e.target.getBoundingClientRect();                              
-    var x = e.clientX - rect.left;                                                
-    var y = e.clientY - rect.top;                                                 
-    if (x < fieldX || x > fieldX + fieldSize ||                               
-        y < fieldY || y > fieldY + fieldSize) {                               
-      return;                                                                 
-    }
-    var xx = ~~((x - fieldX) / cellSize);
-    var yy = ~~((y - fieldY) / cellSize);
-    if (order > 0 && aiPass) {
-      order++;
-      vvv++;
+    if (passFlag == false) {
+      var rect = e.target.getBoundingClientRect();                              
+      var x = e.clientX - rect.left;                                                
+      var y = e.clientY - rect.top;                                                 
+      if (x < fieldX || x > fieldX + fieldSize ||                               
+          y < fieldY || y > fieldY + fieldSize) {                               
+        return;                                                                 
+      }
+      var xx = ~~((x - fieldX) / cellSize);
+      var yy = ~~((y - fieldY) / cellSize);
+      if (order > 0 && aiPass) {
+        order++;
+        vvv++;
         console.log("aiPass");
-      aiPass = false;
-    }
-    if (order == 0) {
+        aiPass = false;
+      }
+      if (order == 0) {
 //      aiPass = false;
-      globalXArray[order].push(xx);
-      globalYArray[order].push(yy);
-    }
+        globalXArray[order].push(xx);
+        globalYArray[order].push(yy);
+      }
   
-    this.setPieceXY(xx, yy);
+      this.setPieceXY(xx, yy);
+    }
   }
 }
 
@@ -324,6 +327,7 @@ function click_ok_button() {
   ++order;
     ++vvv;
   }
+  passFlag = false;
 }
 
 var aiFlag = false;

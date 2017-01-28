@@ -1,5 +1,6 @@
 var ai;
 var aiPass = false;
+var passFlag = false;
 var piece;
 var playGame;
 var ctx;
