@@ -245,9 +245,22 @@ pass() {
     }
   }
 
-  setPieceXY(xx, yy) {
-    if (this.check(xx, yy)) {
-      this.tipOver(xx, yy);
+  setPieceXY(x, y) {
+//    var p = 0;
+//    for (var yy = 0; yy < fieldCellMax; yy++) {
+//    for (var xx = 0; xx < fieldCellMax; xx++) {
+//      if (aiFieldArrayArray[yy][xx] == order % playerNumber) {
+//        //++point[order % playerNumber];
+//        ++p;
+//      }
+//    }
+//    }
+//    if (p == 0) {
+//      return this.check2(x, y);
+//    }
+    
+    if (this.check(x, y)) {
+      this.tipOver(x, y);
 
       if (this.check3()) {
         return true;
@@ -286,6 +299,19 @@ pass() {
     }
     if (order >= playerNumber * 2 && setPieceArrayX.length >= 1) {
       var rand = Math.floor( Math.random() * setPieceArrayX.length);
+      
+      
+      ctx.beginPath();
+      ctx.fillStyle = colorArray[6];
+      ctx.arc(setPieceArrayX[rand] * cellSize + fieldX + cellSize / 2, setPieceArrayY[rand] * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
+      ctx.fill();
+
+      globalXArray[order].push(setPieceArrayX[rand]);
+      globalYArray[order].push(setPieceArrayY[rand]);
+      fieldArrayArray[setPieceArrayY[rand]][setPieceArrayX[rand]]
+      
+      
+      
       piece.setPieceXY(setPieceArrayX[rand], setPieceArrayY[rand]);
     }
       if (order >= playerNumber * 2 && setPieceArrayX.length == 0) {

@@ -88,9 +88,8 @@ class Piece {
       return true;
     }
 
-    //各２コマずつ置くまでひっくり返らない
-    if (this.check2(x, y)){
-      if (order < playerNumber * 2) {
+    if (this.check2(x, y)){           //コマを置く隣にコマがあるかの判定
+      if (order < playerNumber * 2) { //各２コマずつ置くまでひっくり返らない
         fieldArrayArray[y][x] = order % playerNumber;
         globalXArray[order].push(x);
         globalYArray[order].push(y);
@@ -251,7 +250,7 @@ console.log("tipOver" + fieldArrayArray[y][x]);
 
   setPieceXY(xx, yy) {
     var done = false;
-    if (this.check(xx, yy)) {
+    if (this.check(xx, yy)) {//コマを置いても良い
       this.tipOver(xx, yy);
 
       if (this.check3()) {
@@ -292,7 +291,13 @@ console.log("tipOver" + fieldArrayArray[y][x]);
     
   }
   setPiece(e) {
-    if (passFlag == false) {
+      if (order > 0 && aiPass) {
+        order++;
+        vvv++;
+        console.log("aiPass");
+        aiPass = false;
+      }
+    if ((passFlag == false && order % 2 == 0) || order < 4) {
       var rect = e.target.getBoundingClientRect();                              
       var x = e.clientX - rect.left;                                                
       var y = e.clientY - rect.top;                                                 
@@ -302,12 +307,6 @@ console.log("tipOver" + fieldArrayArray[y][x]);
       }
       var xx = ~~((x - fieldX) / cellSize);
       var yy = ~~((y - fieldY) / cellSize);
-      if (order > 0 && aiPass) {
-        order++;
-        vvv++;
-        console.log("aiPass");
-        aiPass = false;
-      }
       if (order == 0) {
 //      aiPass = false;
         globalXArray[order].push(xx);
