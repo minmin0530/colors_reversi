@@ -28,7 +28,7 @@ class Piece {
     }   
   }
     
-  isTipOvered() {
+  isTipOvered() {//ひっくり返ったコマがあるかの判定
     if (point[order % playerNumber] == 0) {
       this.displayPoint(1);
       return true;
@@ -53,7 +53,7 @@ class Piece {
       return true;
     }
   }
-  isExistNextTo(x, y) {      
+  isExistNextTo(x, y) {//コマを置く隣にコマがあるかの判定
     if (fieldArrayArray[y][x] != -1) {
       return false;
     }
@@ -71,7 +71,7 @@ class Piece {
     }
     return false;
   }
-  isPutThePiece(x, y) {
+  isPutThePiece(x, y) {//コマを置いてもいいかの判定
     //point[order % playerNumber] = 0;
     var p = 0;
     for (var yy = 0; yy < fieldCellMax; yy++) {
@@ -93,19 +93,6 @@ class Piece {
         fieldArrayArray[y][x] = order % playerNumber;
         globalXArray[order].push(x);
         globalYArray[order].push(y);
-
-//        for (var i = 0; i < fieldCellMax; ++i) {
-//        for (var j = 0; j < fieldCellMax; ++j) {
-//          ctx.beginPath();
-//          if (fieldArrayArray[i][j] == -1) {
-//            ctx.fillStyle = 'rgb(0,128,0)';        
-//          } else {
-//            ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-//          }
-//          ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-//          ctx.fill();                                             
-//        }
-//        }        
         
         var newPoint = 0;    
         for (var yy = 0; yy < fieldCellMax; yy++) {
@@ -187,12 +174,6 @@ class Piece {
         }
         }
         if (newPoint == (point[order % playerNumber] + 1) ) {
-/*      for (var yy = 0; yy < fieldCellMax; yy++) {
-      for (var xx = 0; xx < fieldCellMax; xx++) {
-        fieldArrayArraySave[yy][xx] = fieldArrayArraySave[yy][xx];
-      }
-      }*/
-//      return false;
         } else {
           return false;
         }
@@ -203,12 +184,8 @@ class Piece {
     return true;
   }
   tipOver(x, y) {
-      if (aiPass) {
-    //    order++;
-    //    aiPass = false;
-      }
     fieldArrayArray[y][x] = order % playerNumber;
-console.log("tipOver" + fieldArrayArray[y][x]);
+    console.log("tipOver" + fieldArrayArray[y][x]);
     for (var v = 0; v < 8; v++) {//８方向
       var addx, addy;
       var rangex, rangey;
@@ -254,20 +231,6 @@ console.log("tipOver" + fieldArrayArray[y][x]);
       this.tipOver(xx, yy);//コマをひっくり返す
 
       if (this.isTipOvered()) {//ひっくり返ったコマがあるか
-//        for (var i = 0; i < fieldCellMax; ++i) {
-//          for (var j = 0; j < fieldCellMax; ++j) {
-//        
-//            ctx.beginPath();
-//            if (fieldArrayArray[i][j] == -1) {
-//              ctx.fillStyle = 'rgb(0,128,0)';        
-//            } else {
-//              ctx.fillStyle = colorArray[fieldArrayArray[i][j]];
-//            }
-//            ctx.arc(j * cellSize + fieldX + cellSize / 2, i * cellSize + fieldY + cellSize / 2, 30, 0, Math.PI / 180 * 2, true);
-//            ctx.fill();                                             
-//          
-//          }
-//        }
         order++;
         if (this.pass()) {
           var display_message = document.getElementById("message");
@@ -283,11 +246,6 @@ console.log("tipOver" + fieldArrayArray[y][x]);
       }
     }
     aiFlag = true;
-//    if (order < fieldCellMax * fieldCellMax) {
-//      if (order % playerNumber != 0) {
-//        ai.setPiece();
-//      }
-//    }
     
   }
   setPiece(e) {
