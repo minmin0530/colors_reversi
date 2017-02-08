@@ -28,7 +28,7 @@ class Piece {
     }   
   }
     
-  check3() {
+  isTipOvered() {
     if (point[order % playerNumber] == 0) {
       this.displayPoint(1);
       return true;
@@ -71,7 +71,7 @@ class Piece {
     }
     return false;
   }
-  check(x, y) {
+  isPutThePiece(x, y) {
     //point[order % playerNumber] = 0;
     var p = 0;
     for (var yy = 0; yy < fieldCellMax; yy++) {
@@ -250,10 +250,10 @@ console.log("tipOver" + fieldArrayArray[y][x]);
 
   setPieceXY(xx, yy) {
     var done = false;
-    if (this.check(xx, yy)) {//コマを置いても良い
-      this.tipOver(xx, yy);
+    if (this.isPutThePiece(xx, yy)) {//コマを置いても良い
+      this.tipOver(xx, yy);//コマをひっくり返す
 
-      if (this.check3()) {
+      if (this.isTipOvered()) {//ひっくり返ったコマがあるか
 //        for (var i = 0; i < fieldCellMax; ++i) {
 //          for (var j = 0; j < fieldCellMax; ++j) {
 //        
@@ -307,7 +307,19 @@ console.log("tipOver" + fieldArrayArray[y][x]);
       }
       var xx = ~~((x - fieldX) / cellSize);
       var yy = ~~((y - fieldY) / cellSize);
-      if (order == 0) {
+
+      //コマが０の場合をチェック
+      var p = 0;
+      for (var yyy = 0; yyy < fieldCellMax; yyy++) {
+      for (var xxx = 0; xxx < fieldCellMax; xxx++) {
+        fieldArrayArraySave[yyy][xxx] = fieldArrayArray[yyy][xxx];
+        if (fieldArrayArray[yyy][xxx] == order % playerNumber) {
+          ++p;
+        }
+      }
+      }
+        
+      if (order == 0 || p == 0) {//コマが０なら
 //      aiPass = false;
         globalXArray[order].push(xx);
         globalYArray[order].push(yy);

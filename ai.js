@@ -308,7 +308,7 @@ pass() {
 
       globalXArray[order].push(setPieceArrayX[rand]);
       globalYArray[order].push(setPieceArrayY[rand]);
-      fieldArrayArray[setPieceArrayY[rand]][setPieceArrayX[rand]]
+//      fieldArrayArray[setPieceArrayY[rand]][setPieceArrayX[rand]] = aiFieldArrayArray[setPieceArrayY[rand]][setPieceArrayX[rand]]
       
       
       
