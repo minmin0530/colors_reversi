@@ -53,7 +53,7 @@ class Piece {
       return true;
     }
   }
-  check2(x, y) {      
+  isExistNextTo(x, y) {      
     if (fieldArrayArray[y][x] != -1) {
       return false;
     }
@@ -88,7 +88,7 @@ class Piece {
       return true;
     }
 
-    if (this.check2(x, y)){           //コマを置く隣にコマがあるかの判定
+    if (this.isExistNextTo(x, y)){    //コマを置く隣にコマがあるかの判定
       if (order < playerNumber * 2) { //各２コマずつ置くまでひっくり返らない
         fieldArrayArray[y][x] = order % playerNumber;
         globalXArray[order].push(x);
