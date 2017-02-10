@@ -115,7 +115,7 @@ class Piece {
   pass() {
     for (var y = 0; y < fieldCellMax; y++) {
     for (var x = 0; x < fieldCellMax; x++) {
-      if (this.check2(x, y)) {
+      if (this.isExistNextTo(x, y)) {
 
         for (var yy = 0; yy < fieldCellMax; yy++) {
         for (var xx = 0; xx < fieldCellMax; xx++) {
