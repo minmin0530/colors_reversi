@@ -243,6 +243,14 @@ class Piece {
           passFlag = true;
         }
         done = true;
+      } else {
+        for (var yyy = 0; yyy < fieldCellMax; yyy++) {
+        for (var xxx = 0; xxx < fieldCellMax; xxx++) {
+          fieldArrayArray[yyy][xxx] = fieldArrayArraySave[yyy][xxx];
+        }
+        }
+        globalXArray[order].length = 0;
+        globalYArray[order].length = 0;
       }
     }
     aiFlag = true;
@@ -277,7 +285,7 @@ class Piece {
       }
       }
         
-      if (order == 0 || p == 0) {//コマが０なら
+      if (order == 0 || (p == 0 && this.isPutThePiece(xx, yy))) {//コマが０なら
 //      aiPass = false;
         globalXArray[order].push(xx);
         globalYArray[order].push(yy);
